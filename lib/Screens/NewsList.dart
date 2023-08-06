@@ -51,6 +51,7 @@ class _NewsListState extends State<NewsList> {
           onPressed: () {
             if (scKey.currentState!.isDrawerOpen) {
               scKey.currentState!.closeDrawer();
+              print("");
             } else {
               scKey.currentState!.openDrawer();
             }
