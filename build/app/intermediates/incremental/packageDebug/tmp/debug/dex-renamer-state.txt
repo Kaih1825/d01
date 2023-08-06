@@ -1,0 +1,4 @@
+#Sat Aug 05 22:45:25 CST 2023
+base.0=/Users/stu/Desktop/WCS_projects/d01/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
