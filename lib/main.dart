@@ -1,7 +1,8 @@
-import 'package:d01/Widgets/Drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
+import 'Widgets/Drawer.dart';
 
 void main() {
   runApp(const MainPage());
@@ -21,22 +22,22 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   }
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          colorScheme: const ColorScheme.light(primary: Color(0xff1D365F))),
+      theme: ThemeData(colorScheme: const ColorScheme.light(primary: Color(0xff1D365F))),
       home: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 50,
           centerTitle: true,
+          title: Image.asset(
+            "res/logo.png",
+            height: 50,
+          ),
           leading: IconButton(
-            icon: Icon(Icons.menu),
             onPressed: () {
               if (scKey.currentState!.isDrawerOpen) {
                 scKey.currentState!.closeDrawer();
@@ -44,10 +45,7 @@ class _MainPageState extends State<MainPage> {
                 scKey.currentState!.openDrawer();
               }
             },
-          ),
-          title: Image.asset(
-            "res/logo.png",
-            height: 50,
+            icon: Icon(Icons.menu),
           ),
         ),
         body: Scaffold(

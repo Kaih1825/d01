@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:d01/Screens/NewsList.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -73,82 +72,105 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 )),
             Expanded(
               child: SingleChildScrollView(
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    unselectedWidgetColor: Colors.white, // here for close state
-                    colorScheme: ColorScheme.light(
-                      primary: Colors.white,
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: ListTile(
+                        leading: Image.asset(
+                          "res/block.png",
+                          width: 20,
+                        ),
+                        title: const Text(
+                          "Home",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: ExpansionPanelList(
-                    expandedHeaderPadding: EdgeInsets.zero,
-                    elevation: 1,
-                    expansionCallback: (index, isExpanded) {
-                      if (!isExpanded) {
-                        nowExpanded = skillsType[index];
-                      } else {
-                        nowExpanded = "";
-                      }
-                      setState(() {});
-                    },
-                    children: [
-                      for (var tisSkill in skillsType)
-                        ExpansionPanel(
-                            isExpanded: nowExpanded == tisSkill,
-                            canTapOnHeader: true,
-                            headerBuilder: (BuildContext context, bool isExpanded) {
-                              return ListTile(
-                                leading: nowExpanded == tisSkill
-                                    ? Icon(
-                                        Icons.close,
-                                        color: Colors.black,
-                                      )
-                                    : Image.asset(
-                                        "res/block_gold.png",
-                                        width: 20,
-                                      ),
-                                title: Text(
-                                  tisSkill,
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                                ),
-                              );
-                            },
-                            body: Column(
-                              children: ListTile.divideTiles(
-                                color: Colors.grey,
-                                context: context,
-                                tiles: [
-                                  for (var skill in json.where((element) => element["Type"] == nowExpanded))
-                                    InkWell(
-                                      onTap: () {
-                                        Get.to(const NewsList(
-                                          keyWord: "",
-                                        ));
-                                      },
-                                      child: ListTile(
-                                        leading: Container(
+                    Container(
+                      color: Colors.grey.shade300,
+                      height: 1,
+                    ),
+                    ExpansionPanelList(
+                      expandedHeaderPadding: EdgeInsets.zero,
+                      elevation: 1,
+                      expansionCallback: (index, isExpanded) {
+                        if (!isExpanded) {
+                          nowExpanded = skillsType[index];
+                        } else {
+                          nowExpanded = "";
+                        }
+                        setState(() {});
+                      },
+                      children: [
+                        for (var tisSkill in skillsType)
+                          ExpansionPanel(
+                              isExpanded: nowExpanded == tisSkill,
+                              canTapOnHeader: true,
+                              headerBuilder: (BuildContext context, bool isExpanded) {
+                                return ListTile(
+                                  leading: nowExpanded == tisSkill
+                                      ? Icon(
+                                          Icons.close,
+                                          color: Colors.black,
+                                        )
+                                      : Image.asset(
+                                          "res/block_gold.png",
                                           width: 20,
                                         ),
-                                        title: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.remove,
-                                              size: 15,
-                                              color: Colors.black,
+                                  title: Text(
+                                    tisSkill,
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                  ),
+                                );
+                              },
+                              body: Column(
+                                children: [
+                                  for (var skill in json.where((element) => element["Type"] == nowExpanded))
+                                    Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+                                              return NewsList(
+                                                keyWord: jsonEncode(
+                                                  {"title": "", "skill": skill['Name'], "start": "", "end": ""},
+                                                ),
+                                              );
+                                            }));
+                                          },
+                                          child: ListTile(
+                                            leading: Container(
+                                              width: 20,
                                             ),
-                                            Text(
-                                              skill["Name"],
-                                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                            title: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.remove,
+                                                  size: 15,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  skill["Name"],
+                                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
+                                        Container(
+                                          color: Colors.grey.shade300,
+                                          height: 1,
+                                        ),
+                                      ],
                                     )
                                 ],
-                              ).toList(),
-                            )),
-                    ],
-                  ),
+                              )),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -371,6 +393,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         }));
                       },
                       child: Container(
+                        key: const Key("Search Button"),
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(360), color: Colors.white),
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),

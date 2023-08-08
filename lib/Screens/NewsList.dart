@@ -26,15 +26,20 @@ class _NewsListState extends State<NewsList> {
 
   void parseJson() async {
     news = jsonDecode(await DefaultAssetBundle.of(context).loadString("res/news.json"));
-    if (widget.keyWord != "") {
+    var tisJson = jsonDecode(widget.keyWord);
+    if (tisJson["title"] != "") {
       var keywordJson = jsonDecode(widget.keyWord);
       news = news.where((e) {
         var sd = e["Date"].toString().split("/");
         var sDate = DateTime(int.parse(sd[2]), int.parse(sd[0]), int.parse(sd[1]));
         return (DateTime.parse(keywordJson["start"])).isBefore(sDate) &&
             (DateTime.parse(keywordJson["end"])).isAfter(sDate) &&
-            "all skills".contains(keywordJson["skill"].toString().toLowerCase()) &&
+            e["Skill"].toString().toLowerCase().contains(keywordJson["skill"].toString().toLowerCase()) &&
             e["Title"].toString().toLowerCase().contains(keywordJson["title"].toString().toLowerCase());
+      }).toList();
+    } else {
+      news = news.where((element) {
+        return element["Skill"].toString().contains("All Skill") || element["Skill"].toString().contains(tisJson["skill"]);
       }).toList();
     }
     setState(() {});
@@ -90,8 +95,8 @@ class _NewsListState extends State<NewsList> {
                             width: 40,
                           ),
                           Text(
-                            widget.keyWord == "" ? "Information Network Cabling" : "Search Results",
-                            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                            jsonDecode(widget.keyWord)["title"] == "" ? jsonDecode(widget.keyWord)["skill"] : "Search Results",
+                            style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -103,6 +108,7 @@ class _NewsListState extends State<NewsList> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 50),
                   child: ListView.builder(
+                    key: const Key("NewsList"),
                     itemCount: news.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
@@ -156,8 +162,12 @@ class _NewsListState extends State<NewsList> {
                                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
                                     child: Row(
                                       children: [
-                                        const Text(
-                                          "All skills",
+                                        Text(
+                                          news[index]["Skill"],
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: news[index]["Skill"].toString().length > 10 ? 15 : 20),
                                         ),
                                         const Spacer(),
                                         Text(
